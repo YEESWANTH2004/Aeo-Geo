@@ -25,3 +25,6 @@ services:
       - path: "/**/*.css"
         name: Content-Type
         value: text/css; charset=utf-8
+      - path: "/images/*.png"
+        name: Content-Type
+        value: image/png
