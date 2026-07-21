@@ -1,12 +1,8 @@
 services:
   - type: web
     name: aeo-geo-backend
-    runtime: node
+    runtime: docker
     plan: free
-    rootDir: backend
-    buildCommand: npm install && npx playwright install --with-deps chromium
-    startCommand: node server.js
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
     healthCheckPath: /health
-    envVars:
-      - key: NODE_VERSION
-        value: 20
