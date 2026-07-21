@@ -7,3 +7,7 @@ backend/server.err.log
 .env.local
 .DS_Store
 Thumbs.db
+PROJECT_DOCUMENTATION.md
+PROJECT_DOCUMENTATION.pdf
+PROJECT_OVERVIEW.md
+PROJECT_OVERVIEW.pdf
