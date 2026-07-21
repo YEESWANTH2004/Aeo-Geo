@@ -1,8 +1,28 @@
 const { scrapeWebsite } = require("../scraper/scraper");
 const { createBrowserPool } = require("../scraper/browserPool");
 const { categorizeUrl } = require("../engines/llmsTxt/urlCategorizer");
-const { CRAWL_MAX_PAGES } = require("../config/env");
+const { CRAWL_MAX_PAGES, CRAWL_CONCURRENCY } = require("../config/env");
 const logger = require("../utils/logger");
+
+// Rendering pages one-at-a-time (or in small batches) keeps memory bounded —
+// running all of them via Promise.all spins up one Chromium context per page
+// simultaneously, which is fine locally but OOMs on memory-capped hosts.
+async function mapWithConcurrency(items, limit, mapper) {
+  const results = new Array(items.length);
+  let nextIndex = 0;
+
+  async function worker() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex++;
+      results[currentIndex] = await mapper(items[currentIndex]);
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, worker)
+  );
+  return results;
+}
 
 const PRIORITY_CATEGORIES = new Set([
   "about",
@@ -104,8 +124,10 @@ async function crawlWebsite(seedUrl) {
 
     const additionalUrls = selectCrawlTargets(seedWebsite, CRAWL_MAX_PAGES - 1);
 
-    const additionalPages = await Promise.all(
-      additionalUrls.map(async (url) => {
+    const additionalPages = await mapWithConcurrency(
+      additionalUrls,
+      CRAWL_CONCURRENCY,
+      async (url) => {
         try {
           const page = await scrapeWebsite(url, { browserPool });
           pagesCrawled.push(url);
@@ -114,7 +136,7 @@ async function crawlWebsite(seedUrl) {
           logger.warn(`Skipping ${url} during crawl:`, err.message);
           return null;
         }
-      })
+      }
     );
 
     const website = mergeWebsiteModels(

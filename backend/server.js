@@ -9,6 +9,10 @@ const logger = require("./utils/logger");
 
 const app = express();
 
+// Render (and most PaaS hosts) sit behind a reverse proxy, so Express needs
+// this to correctly read X-Forwarded-For for rate limiting.
+app.set("trust proxy", 1);
+
 app.use(cors());
 app.use(express.json());
 
