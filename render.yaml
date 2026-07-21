@@ -3,6 +3,6 @@ services:
     name: aeo-geo-backend
     runtime: docker
     plan: free
-    dockerContext: backend
+    dockerContext: .
     dockerfilePath: backend/Dockerfile
     healthCheckPath: /health

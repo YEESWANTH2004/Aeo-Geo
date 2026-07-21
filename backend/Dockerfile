@@ -2,10 +2,13 @@ FROM mcr.microsoft.com/playwright:v1.61.1-jammy
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install --omit=dev
+COPY backend/package*.json backend/
+RUN cd backend && npm install --omit=dev
 
-COPY . .
+COPY backend backend
+COPY frontend frontend
+
+WORKDIR /app/backend
 
 EXPOSE 3000
 
