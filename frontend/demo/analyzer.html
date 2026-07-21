@@ -272,8 +272,9 @@
       watchForCompletion();
 
       const script = document.createElement("script");
-      script.src = `${API_BASE}/widget.js`;
+      script.src = "/widget.js";
       script.setAttribute("data-url", targetUrl);
+      script.setAttribute("data-api-base", API_BASE);
       slot.appendChild(script);
     });
   </script>

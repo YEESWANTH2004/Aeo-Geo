@@ -6,3 +6,9 @@ services:
     dockerContext: .
     dockerfilePath: backend/Dockerfile
     healthCheckPath: /health
+
+  - type: web
+    name: aeo-geo-frontend
+    runtime: static
+    buildCommand: "true"
+    staticPublishPath: ./frontend
