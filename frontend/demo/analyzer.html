@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AEO/GEO Analyzer</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page-plane: #0d0d0d;
+      --surface-1: #1a1a19;
+      --surface-2: #21201d;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted: #898781;
+      --border: rgba(255, 255, 255, 0.1);
+      --accent: #3987e5;
+      --accent-2: #4a3aa7;
+      --accent-hover: #2a78d6;
+      --status-critical: #e66767;
+      --shadow: rgba(0, 0, 0, 0.35);
+      --glow: rgba(57, 135, 229, 0.16);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        color-scheme: light;
+        --page-plane: #f9f9f7;
+        --surface-1: #fcfcfb;
+        --surface-2: #f3f2ee;
+        --text-primary: #0b0b0b;
+        --text-secondary: #52514e;
+        --text-muted: #898781;
+        --border: rgba(11, 11, 11, 0.1);
+        --accent: #2a78d6;
+        --accent-2: #4a3aa7;
+        --accent-hover: #184f95;
+        --status-critical: #d03b3b;
+        --shadow: rgba(11, 11, 11, 0.08);
+        --glow: rgba(42, 120, 214, 0.1);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--page-plane);
+      background-image: radial-gradient(600px 300px at 15% 0%, var(--glow), transparent 70%);
+      background-repeat: no-repeat;
+      color: var(--text-primary);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 48px 20px 80px;
+    }
+
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      animation: aeo-fade-in 0.5s ease both;
+    }
+
+    @keyframes aeo-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .brand__mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px -4px var(--shadow);
+    }
+
+    .brand__name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    h1 {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      margin: 0 0 28px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .analyzer-form {
+      display: flex;
+      gap: 8px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 8px;
+      box-shadow: 0 1px 2px var(--shadow), 0 8px 24px -10px var(--shadow);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .analyzer-form:focus-within {
+      box-shadow: 0 0 0 3px var(--glow), 0 8px 24px -10px var(--shadow);
+    }
+
+    .analyzer-form input {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 15px;
+      outline: none;
+    }
+
+    .analyzer-form input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .analyzer-form input.is-invalid {
+      color: var(--status-critical);
+    }
+
+    .analyzer-form button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 1px 2px var(--shadow);
+      transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .analyzer-form button:hover:not(:disabled) {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px -2px var(--shadow);
+    }
+
+    .analyzer-form button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .analyzer-form button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .field-error {
+      color: var(--status-critical);
+      font-size: 13px;
+      margin: 8px 0 0;
+      min-height: 16px;
+    }
+
+    #widget-slot {
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="brand">
+      <div class="brand__mark">AG</div>
+      <div class="brand__name">AEO/GEO Toolkit</div>
+    </div>
+
+    <h1>Analyze any website</h1>
+    <p class="subtitle">Paste a public URL to scrape it, score it for AEO/GEO, and generate a ready-to-use llms.txt.</p>
+
+    <form class="analyzer-form" id="analyzer-form" novalidate>
+      <input
+        type="text"
+        id="url-input"
+        placeholder="https://example.com"
+        autocomplete="off"
+      />
+      <button type="submit" id="analyze-button">Analyze</button>
+    </form>
+    <p class="field-error" id="field-error"></p>
+
+    <div id="widget-slot"></div>
+  </div>
+
+  <script>
+    // Update to your deployed backend URL once it's live, e.g.:
+    // const API_BASE = "https://your-app.onrender.com";
+    const API_BASE = "http://localhost:3000";
+    const form = document.getElementById("analyzer-form");
+    const input = document.getElementById("url-input");
+    const button = document.getElementById("analyze-button");
+    const fieldError = document.getElementById("field-error");
+    const slot = document.getElementById("widget-slot");
+
+    function normalizeUrl(value) {
+      const trimmed = value.trim();
+      if (!trimmed) return null;
+      if (!/^https?:\/\//i.test(trimmed)) return `https://${trimmed}`;
+      return trimmed;
+    }
+
+    function isPlausibleUrl(value) {
+      try {
+        new URL(value);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function setBusy(isBusy) {
+      button.disabled = isBusy;
+      button.textContent = isBusy ? "Analyzing…" : "Analyze";
+    }
+
+    function watchForCompletion() {
+      const observer = new MutationObserver(() => {
+        if (slot.querySelector(".stat-tile-row, .aeo-geo-widget__error")) {
+          setBusy(false);
+          observer.disconnect();
+        }
+      });
+      observer.observe(slot, { childList: true, subtree: true });
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      if (button.disabled) return; // already analyzing, ignore re-entrant submits
+
+      const targetUrl = normalizeUrl(input.value);
+
+      if (!targetUrl || !isPlausibleUrl(targetUrl)) {
+        input.classList.add("is-invalid");
+        fieldError.textContent = "Enter a valid website URL.";
+        return;
+      }
+
+      input.classList.remove("is-invalid");
+      fieldError.textContent = "";
+      slot.innerHTML = "";
+      setBusy(true);
+      watchForCompletion();
+
+      const script = document.createElement("script");
+      script.src = `${API_BASE}/widget.js`;
+      script.setAttribute("data-url", targetUrl);
+      slot.appendChild(script);
+    });
+  </script>
+</body>
+</html>

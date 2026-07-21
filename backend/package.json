@@ -1,0 +1,21 @@
+{
+  "name": "aeo-geo-backend",
+  "version": "1.0.0",
+  "description": "AEO + GEO analyzer and llms.txt generator backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.6.0",
+    "playwright": "1.61.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

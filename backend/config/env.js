@@ -1,0 +1,13 @@
+module.exports = {
+  PORT: process.env.PORT || 3000,
+  REQUEST_TIMEOUT_MS: 10000,
+  USER_AGENT:
+    "Mozilla/5.0 (compatible; AeoGeoBot/1.0; +https://example.com/bot)",
+  CACHE_TTL_MS: 5 * 60 * 1000,
+  MAX_MAIN_CONTENT_CHARS: 20000,
+  EMPTY_SHELL_TEXT_THRESHOLD: 150,
+  HEADLESS_RENDER_TIMEOUT_MS: 30000,
+  RATE_LIMIT_WINDOW_MS: 60 * 1000,
+  RATE_LIMIT_MAX_REQUESTS: 20,
+  CRAWL_MAX_PAGES: 8,
+};
