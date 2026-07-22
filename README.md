@@ -150,7 +150,7 @@ This app is split across two hosts because the backend needs a persistent Node p
 | Part | Host | Why |
 |---|---|---|
 | `backend/` | [Render](https://render.com) | Persistent Node server + Playwright/Chromium via Docker |
-| `frontend/` | [Netlify](https://netlify.com) | Static files only — no server needed |
+| `frontend/` | [Render](https://render.com) | Static files only — no server needed |
 
 The backend is deployed via [`render.yaml`](render.yaml) (Blueprint) using [`backend/Dockerfile`](backend/Dockerfile), which is based on Microsoft's official Playwright image so Chromium's system dependencies are already baked in.
 
